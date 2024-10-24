@@ -1,0 +1,61 @@
+﻿@using ExamForms.Constants
+@using Newtonsoft.Json
+@using static ExamForms.Constants.Enums
+@model ExamForms.ViewModel.QuestionViewModel
+
+@{
+
+}
+
+<div class="modal fade" id="questionModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="templateQuestionForm">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="questionModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <input type="hidden" asp-for="TemplateId" />
+                    <input type="hidden" asp-for="QuestionId" />
+                    <div class="mb-3">
+                        <label class="form-label" for="questionTitle">@Html.DisplayNameFor(x => x.QuestionTitle)</label>
+                        @Html.EditorFor(x => x.QuestionTitle, new { htmlAttributes = new { placeholder = "Question title", id = "questionTitle", @class = "form-control", required = "required" } })
+                        @Html.ValidationMessageFor(x => x.QuestionTitle, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="questionType">@Html.DisplayNameFor(x => x.QuestionType)</label>
+                        @Html.DropDownListFor(model => model.QuestionType,
+                                 new SelectList(Enum.GetValues(typeof(TemplateQuestionTypeEnum)).Cast<TemplateQuestionTypeEnum>().Select(q => new { Id = (int)q, Name = q.ToString() }), "Id", "Name"),
+                                 "-- Select question type --",
+                                 new { @class = "form-control", id = "questionType", onchange = "questionTypeEvent(this)" })
+                        @Html.ValidationMessageFor(x => x.QuestionType, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div id="add_question_checkbox_modal_placeholder">
+                        @if (Model != null && Model.QuestionType != null && int.Parse(Model?.QuestionType) == 4)
+                        {
+                            <partial name="~/Areas/Templates/Views/Shared/_AddQuestionCheckboxModal.cshtml" model="Model" />
+                        }
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="questionDescription">@Html.DisplayNameFor(x => x.Description)</label>
+                        @Html.TextAreaFor(x => x.Description, new { @class = "form-control", id = "questionDescription" })
+                    </div>
+                    <div class="mb-3">
+                        @Html.CheckBoxFor(x => x.IsDisplayed, new { id = "isDisplayed", @class = "form-check-input" })
+                        <label class="form-label ms-3" for="isDisplayed">@Html.DisplayNameFor(x => x.IsDisplayed)</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/site.js"></script>

@@ -1,0 +1,68 @@
+﻿@model ExamForms.ViewModel.TemplateViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container my-4">
+    <h2 class="mb-4 text-center">Latest Templates</h2>
+    <div class="row">
+        @foreach (var template in Model.TemplatesByUser)
+        {
+            if (template != null && !string.IsNullOrEmpty(template.Title) && !string.IsNullOrEmpty(template.Image))
+            {
+                <a class="col-md-3 text-decoration-none" href="@Url.Action("Details", "Template", new { area = "Templates", id = template.TemplateId })">
+                    <div class="card mb-4 shadow-sm h-100">
+                        <img src="@template.Image" class="card-img-top template-img" alt="Template Image" height="200" width="200">
+                        <div class="card-body">
+                            <h5 class="card-title text-decoration-none">@template.Title</h5>
+                            @Html.Raw(@template.Description)
+                            <p class="card-text"><small class="text-muted">Author: @template.CreatedBy</small></p>
+                        </div>
+                    </div>
+                </a>
+            }
+        }
+    </div>
+
+    <h2 class="my-4 text-center">Top 5 Most Popular Templates</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Template Name</th>
+                    <th>Author</th>
+                    <th>Number of Filled Forms</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var i = 1;
+                    foreach (var templates in Model.MostPopularTemplates)
+                    {
+                        if (templates != null && !string.IsNullOrEmpty(templates.Title))
+                        {
+                            <tr>
+                                <th scope="row">@i</th>
+                                <td>@templates.Title</td>
+                                <td>@templates.CreatedBy</td>
+                                <td>@templates.TemplateCount</td>
+                            </tr>
+                            i++;
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="my-4 text-center">Tag Cloud</h2>
+    <div class="text-center">
+        <div class="tag-cloud">
+            @foreach (var tag in Model.Tag)
+            {
+                <a href="@Url.Action("Search", "Template", new { tag = tag.TagName })" class="badge bg-primary m-2 p-2"><small>@tag.TagName</small></a>
+            }
+        </div>
+    </div>
+</div>

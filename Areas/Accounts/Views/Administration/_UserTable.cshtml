@@ -1,0 +1,70 @@
+﻿@using ExamForms.Constants
+@using ExamForms.ViewModel.Account;
+@model List<ApplicationUserViewModel>
+
+@{
+    var i = 1;
+}
+
+<div class="">
+    <div class="">
+        <div class="" style="float: left;">
+            <button id="btnDelete" class="btn btn-sm btn-danger">Delete</button>
+            <button id="btnBlock" class="btn btn-sm btn-warning">Block</button>
+            <button id="btnUnblock" class="btn btn-sm btn-success">Unblock</button>
+        </div>
+        <div class="" style="float: right;">
+            <button id="btnAddToAdmin" class="btn btn-sm btn-primary">Add to Admin</button>
+            <button id="btnRemoveFromAdmin" class="btn btn-sm btn-secondary">Remove from Admin</button>
+        </div>
+    </div>    
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="text-center">
+                    <input class="form-check-input" type="checkbox" value="" id="headerCheckBox">
+                </th>
+                <th>SL</th>
+                <th>Name</th>
+                <th>User Name</th>
+                <th>E-mail</th>
+                <th>Status</th>
+                <th>Access</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                var lockOut = (@user.LockoutEnd.HasValue) ? "<span class=\"badge bg-success\">Blocked</span>" : "Unblocked";
+                <tr>
+                    <td class="text-center">
+                        <input class="form-check-input bodyCheckBox" type="checkbox" value="@user.Id">
+                    </td>
+                    <td class="text-center">@i</td>
+                    <td>@Html.DisplayFor(x => user.FirstName) @Html.DisplayFor(x => user.LastName)</td>
+                    <td>@Html.DisplayFor(x => user.UserName)</td>
+                    <td>@Html.DisplayFor(x => user.Email)</td>
+                    <td class="">
+                        @if (@user.LockoutEnd.HasValue)
+                        { <span class="badge bg-danger">Blocked</span> }
+                        else
+                        { <span class="badge bg-success">Active</span> }
+                    </td>
+                    <td class="">
+                        @if (@user.RoleName == Enums.AppRoleEnums.Admin.ToString())
+                        { <span class="badge bg-danger">@user.RoleName</span> }
+                        else
+                        { <span class="badge bg-success">@user.RoleName</span> }
+                    </td>
+                    <td class="text-center">
+                        <a class="btn btn-sm btn-secondary"
+                           href="@Url.Action("EditUser", "Administration", new { area = "Accounts", id = user.Id })">Edit</a>
+                    </td>
+                </tr>
+                i++;
+            }
+        <tbody>
+    </table>
+</div>

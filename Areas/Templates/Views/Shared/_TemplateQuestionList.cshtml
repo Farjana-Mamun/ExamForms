@@ -1,0 +1,71 @@
+﻿@using ExamForms.Constants
+@using static ExamForms.Constants.Enums
+@model IEnumerable<ExamForms.ViewModel.QuestionViewModel>
+
+@{
+    var questionTypes = new Dictionary<int, string>
+    {
+        { 1, "Single Line" },
+        { 2, "Multiple Line" },
+        { 3, "Positive Integer" },
+        { 4, "Checkbox" }
+    };
+}
+
+<style>
+    #questionListSortable {
+        list-style-type: none;
+        border: 1px solid #c7c7c7;
+        padding: 0 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+    }
+
+    #questionListSortable li {
+        padding: 10px;
+        border-bottom: 1px solid #c7c7c7;
+    }
+</style>
+@if (Model != null && Model.Any())
+{
+
+    <ul id="questionListSortable">
+        <li class="ui-state-default ui-sortable-handle d-flex">
+            <p style="width: 65%; margin: 0;"># Question Title</p>
+            <p style="width: 15%; margin: 0;">Question Type</p>
+            <p style="width: 10%; margin: 0;" class="text-center">Is Displayed</p>
+            @if (ViewBag.TemplateStatus != "Read-Only")
+            {
+                <p style="width: 10%; margin: 0; text-align: end;">Actions</p>
+            }
+        </li>
+        @foreach (var data in Model)
+        {
+            var checkbox = data.IsDisplayed ? "checked" : "";
+            var questionType = questionTypes[int.Parse(data.QuestionType)];
+
+            <li class="ui-state-default ui-sortable-handle d-flex" data-question-id="@data.QuestionId" data-display-order="@data.DisplayOrder">
+                <p style="width: 65%; margin: 0;"><i class='bx bx-menu me-2'></i>@data.QuestionTitle</p>
+                <p style="width: 15%; margin: 0;">@questionType</p>
+                <div style="width: 10%; text-align: center;">
+                    <input type="checkbox" @checkbox class="form-check-input" />
+                </div>
+                @if (ViewBag.TemplateStatus != "Read-Only")
+                {
+                    <div style="width: 10%">
+                        <div class="float-end">
+                            <button class="btn btn-sm btn-secondary" onclick="editTemplateQuestion(@data.QuestionId, @data.TemplateId)"><i class='bx bx-edit'></i></button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteTemplateQuestion(@data.QuestionId, @data.TemplateId)"><i class='bx bx-trash'></i></button>
+                        </div>
+                    </div>
+                }
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <div class="alert alert-warning text-center mt-5 mb-5">
+        No questions available at the moment.
+    </div>
+}

@@ -1,0 +1,50 @@
+﻿@using ExamForms.Constants
+@using ExamForms.ViewModel.Account;
+@using System.Web.Mvc.Ajax
+@model List<ApplicationUserViewModel>
+@{
+    ViewBag.Title = "Users";
+}
+
+<section class="header-background">
+    <div class="container">
+        @if (Model != null)
+        {
+            <div class="d-flex justify-content-between ps-3 pe-3">
+                <h3 class="fw-bold">List of all Users</h3>
+                <a class="btn btn-primary mb-3" asp-action="SignUp" asp-controller="Account">Add New User</a>
+            </div>
+            <div class="container">
+                @await Html.PartialAsync("_UserTable", Model)
+            </div>
+        }
+        else
+        {
+            <div class="card">
+                <div class="card-header">
+                    No users created yet
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Use the button below to create a user</h5>
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-primary" asp-action="SignUp" asp-controller="Account">Create User</a>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<div class="modal" tabindex="-1" id="cvPopupModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-body"> </div>
+        </div>
+    </div>
+</div>
+
+<div id="delete_confirmation_modal_placeholder"></div>
+
+@section Scripts {
+    <script src="~/js/account.js"></script>
+}

@@ -1,0 +1,56 @@
+﻿@using ExamForms.Constants
+@model ExamForms.ViewModel.Account.SignUpViewModel
+
+<div class="w-50 m-auto">
+    <form asp-action="SignUp" method="post">
+        @if (User.IsInRole(Enums.AppRoleEnums.Admin.ToString()))
+        {
+            <h1 class="m-0 mb-3 fw-bold text-center">Add new User</h1>
+        } 
+        else
+        {
+            <h1 class="m-0 mb-3 fw-bold text-center">REGISTRATION</h1>            
+        }
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="mb-3">
+            <label class="form-label" for="firstName">@Html.DisplayNameFor(x => x.FirstName)</label>
+            @Html.EditorFor(x => x.FirstName, new { htmlAttributes = new { placeholder = "John", id = "firstName", @class = "form-control", required = "required" } })
+            @Html.ValidationMessageFor(x => x.FirstName, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="lastName">@Html.DisplayNameFor(x => x.LastName)</label>
+            @Html.EditorFor(x => x.LastName, new { htmlAttributes = new { placeholder = "Doe", id = "lastName", @class = "form-control", required = "required" } })
+            @Html.ValidationMessageFor(x => x.LastName, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="email">@Html.DisplayNameFor(x => x.Email)</label>
+            @Html.EditorFor(x => x.Email, new { htmlAttributes = new { placeholder = "john@yahoo.com", id = "email", @class = "form-control", required = "required" } })
+            @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="password">@Html.DisplayNameFor(x => x.Password)</label>
+            @Html.EditorFor(x => x.Password, new { htmlAttributes = new { placeholder = "********", id = "password", @class = "form-control", required = "required" } })
+            @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="confirmPassword">@Html.DisplayNameFor(x => x.ConfirmPassword)</label>
+            @Html.EditorFor(x => x.ConfirmPassword, new { htmlAttributes = new { placeholder = "********", id = "confirmPassword", @class = "form-control", required = "required" } })
+            @Html.ValidationMessageFor(x => x.ConfirmPassword, "", new { @class = "text-danger" })
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="rememberMe">
+            <label class="form-check-label" for="rememberMe">Remember me</label>
+        </div>
+        <div class="d-flex">
+            <button type="submit" class="btn btn-secondary">SignUp</button>
+            @if (User.IsInRole(Enums.AppRoleEnums.Admin.ToString()))
+            {
+                <a class="btn btn-outline-secondary ms-5" asp-area="Accounts" asp-controller="Administration" asp-action="ListOfAllUsers">Back to List</a>
+            }   
+            else
+            {
+                <p type="submit" class="ps-2 m-0 d-flex align-items-center">Already have an account? <a href="@Url.Action("SignIn", "Account", new { area = "Accounts" })"> Log In</a></p>
+            }
+        </div>
+    </form>
+</div>

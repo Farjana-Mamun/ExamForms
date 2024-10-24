@@ -1,0 +1,99 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "bootstrap@5.3.3",
+      "destination": "wwwroot/lib/bootstrap/",
+      "files": [
+        "js/bootstrap.bundle.js",
+        "css/bootstrap-grid.css",
+        "css/bootstrap-grid.css.map",
+        "css/bootstrap-grid.min.css",
+        "css/bootstrap-grid.min.css.map",
+        "css/bootstrap-grid.rtl.css",
+        "css/bootstrap-grid.rtl.css.map",
+        "css/bootstrap-grid.rtl.min.css",
+        "css/bootstrap-grid.rtl.min.css.map",
+        "css/bootstrap-reboot.css",
+        "css/bootstrap-reboot.css.map",
+        "css/bootstrap-reboot.min.css",
+        "css/bootstrap-reboot.min.css.map",
+        "css/bootstrap-reboot.rtl.css",
+        "css/bootstrap-reboot.rtl.css.map",
+        "css/bootstrap-reboot.rtl.min.css",
+        "css/bootstrap-reboot.rtl.min.css.map",
+        "css/bootstrap-utilities.css",
+        "css/bootstrap-utilities.css.map",
+        "css/bootstrap-utilities.min.css",
+        "css/bootstrap-utilities.min.css.map",
+        "css/bootstrap-utilities.rtl.css",
+        "css/bootstrap-utilities.rtl.css.map",
+        "css/bootstrap-utilities.rtl.min.css",
+        "css/bootstrap-utilities.rtl.min.css.map",
+        "css/bootstrap.css",
+        "css/bootstrap.css.map",
+        "css/bootstrap.min.css",
+        "css/bootstrap.min.css.map",
+        "css/bootstrap.rtl.css",
+        "css/bootstrap.rtl.css.map",
+        "css/bootstrap.rtl.min.css",
+        "css/bootstrap.rtl.min.css.map",
+        "js/bootstrap.bundle.js.map",
+        "js/bootstrap.bundle.min.js",
+        "js/bootstrap.bundle.min.js.map",
+        "js/bootstrap.esm.js",
+        "js/bootstrap.esm.js.map",
+        "js/bootstrap.esm.min.js",
+        "js/bootstrap.esm.min.js.map",
+        "js/bootstrap.js",
+        "js/bootstrap.js.map",
+        "js/bootstrap.min.js",
+        "js/bootstrap.min.js.map"
+      ]
+    },
+    {
+      "library": "fontawesome-iconpicker@3.2.0",
+      "destination": "wwwroot/lib/fontawesome-iconpicker/"
+    },
+    {
+      "library": "boxicons@2.1.4",
+      "destination": "wwwroot/lib/boxicons/",
+      "files": [
+        "dist/boxicons.js",
+        "dist/boxicons.min.js",
+        "css/boxicons.min.css",
+        "css/boxicons.css"
+      ]
+    },
+    {
+      "library": "tagify@4.31.3",
+      "destination": "wwwroot/lib/tagify/",
+      "files": [
+        "tagify.css",
+        "tagify.esm.js",
+        "tagify.esm.min.js",
+        "tagify.js",
+        "tagify.min.css",
+        "tagify.min.js",
+        "tagify.polyfills.min.js"
+      ]
+    },
+    {
+      "library": "quill@2.0.2",
+      "destination": "wwwroot/lib/quill/"
+    },
+    {
+      "library": "jqueryui@1.14.0",
+      "destination": "wwwroot/lib/jqueryui/",
+      "files": [
+        "jquery-ui.min.js",
+        "jquery-ui.js"
+      ]
+    },
+    {
+      "library": "jquery.blockUI@2.70",
+      "destination": "wwwroot/lib/jquery.blockUI/"
+    }
+  ]
+}

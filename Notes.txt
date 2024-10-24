@@ -1,0 +1,20 @@
+SELECT * FROM AspNetUsers
+SELECT * FROM AspNetUserRoles
+SELECT * FROM AspNetRoles
+
+UPDATE AspNetUserRoles SET RoleId = '90df4184-8e50-41c6-a720-283922d6cdae'
+WHERE UserId = 'dd897bfb-08d0-4cb0-a708-e503489212f6'
+GO
+UPDATE AspNetUsers SET RoleName = 'Admin'
+WHERE Id = 'dd897bfb-08d0-4cb0-a708-e503489212f6'
+
+--------------------- MIGRATION -----------------------
+add-migration Initial1 -context IdentityContext
+update-database -context IdentityContext
+add-migration Initial2 -context ExamFormDbContext
+update-database -context ExamFormDbContext
+-------------------------------------------------------
+
+--------------------- SCAFFOLDING ---------------------
+Scaffold-DbContext “Data Source=RASEL-PLACOVU\SQLEXPRESS;Initial Catalog=ExamFormDB;User Id=sa;Password=12345;TrustServerCertificate=True;” -Provider Microsoft.EntityFrameworkCore.SqlServer -Context ExamFormDbContext -O Data -Force
+-------------------------------------------------------

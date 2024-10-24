@@ -1,0 +1,64 @@
+﻿@using ExamForms.Constants
+@using Newtonsoft.Json
+@using static ExamForms.Constants.Enums
+@model ExamForms.ViewModel.FormViewModel
+
+@{
+
+}
+
+<div class="modal fade" id="formDetailsModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="p-3" style="background-color: #eeeeee; border-radius: 10px;">
+                <input type="hidden" asp-for="TemplateId" disabled />
+                <div class="question-list">
+                    @for (int i = 0; i < Model.Questions.Count(); i++)
+                    {
+                        var question = Model.Questions.ElementAt(i);
+                        var answer = Model.Answers.ElementAtOrDefault(i);
+
+                        <input type="hidden" name="Answers[@i].QuestionId" value="@question.QuestionId" />
+
+                        <div class="question-item mb-3">
+                            <label class="form-label">@question.QuestionTitle</label>
+
+                            @if (int.Parse(question.QuestionType) == 1)
+                            {
+                                <input class="form-control" type="text" disabled value="@answer?.AnswerText" />
+                            }
+                            else if (int.Parse(question.QuestionType) == 2)
+                            {
+                                <textarea class="form-control" id="formTextAreaAnswer" disabled name="Answers[@i].AnswerText" rows="3">
+                                    @answer?.AnswerText
+                                        </textarea>
+                            }
+                            else if (int.Parse(question.QuestionType) == 3)
+                            {
+                                <input class="form-control" type="number" disabled value="@answer?.AnswerText" />
+                            }
+                            else if (int.Parse(question.QuestionType) == 4)
+                            {
+                                question.SelectedOptionId = int.Parse(answer.AnswerText);
+                                <partial name="~/Areas/Templates/Views/Shared/_AddQuestionCheckboxModal.cshtml" model="question" />
+                            }
+
+                            <p class="ps-5 pe-5 pt-1 pb-1 m-0" style="color: #7d7d7d;">
+                                <i class='bx bx-chevrons-right'></i> @question.Description
+                            </p>
+                        </div>
+                        <hr />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/site.js"></script>
+@section Scripts {
+    <script>
+
+    </script>
+}

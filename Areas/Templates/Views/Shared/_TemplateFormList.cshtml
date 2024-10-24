@@ -1,0 +1,52 @@
+﻿@model IEnumerable<ExamForms.ViewModel.FormViewModel>
+
+@{
+
+}
+
+<style>
+    #formList {
+        list-style-type: none;
+        border: 1px solid #c7c7c7;
+        padding: 0 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+    }
+
+    #formList li {
+        padding: 10px;
+        border-bottom: 1px solid #c7c7c7;
+    }
+</style>
+@if (Model != null && Model.Any())
+{
+    int index = 1;
+    <ul id="formList">
+        <li class="ui-state-default ui-sortable-handle d-flex">
+            <p style="width: 5%; margin: 0;">#</p>
+            <p style="width: 45%; margin: 0;">Form Submitted By</p>
+            <p style="width: 40%; margin: 0;">Submitted Date</p>
+            <p style="width: 10%; margin: 0; text-align: end;">Actions</p>
+        </li>
+        @foreach (var data in Model)
+        {
+            <li class="ui-state-default ui-sortable-handle d-flex">
+                <p style="width: 5%; margin: 0;">@index</p>
+                <p style="width: 45%; margin: 0;">@data.SubmittedBy</p>
+                <p style="width: 40%; margin: 0;">@data.SubmittedDate.Date</p>
+                <div style="width: 10%">
+                    <div class="float-end">
+                        <a class="btn btn-sm btn-info" onclick="detailsTemplateForm(@data.FormId, @data.TemplateId)"><i class='bx bx-info-circle'></i></a>
+                    </div>
+                </div>
+            </li>
+            index++;
+        }
+    </ul>
+}
+else
+{
+    <div class="alert alert-warning text-center  mt-5 mb-5">
+        No form available at the moment.
+    </div>
+}

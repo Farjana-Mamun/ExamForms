@@ -1,0 +1,53 @@
+﻿@model ExamForms.ViewModel.FormViewModel
+
+<div class="container p-3" style="background-color: #eeeeee; border-radius: 10px;">
+    @using (Html.BeginForm("SubmitForm", "Forms", FormMethod.Post, new { area = "Templates" }))
+    {
+        <input type="hidden" asp-for="TemplateId" />
+
+        <div class="question-list">
+            @for (int i = 0; i < Model.Questions.Count(); i++)
+            {
+                var question = Model.Questions.ElementAt(i);
+                <input type="hidden" name="Answers[@i].QuestionId" value="@question.QuestionId" />
+
+                <div class="question-item mb-3">
+                    <label class="form-label">@question.QuestionTitle</label>
+
+                    @if (int.Parse(question.QuestionType) == 1)
+                    {
+                        <input class="form-control" type="text" name="Answers[@i].AnswerText" />
+                    }
+                    else if (int.Parse(question.QuestionType) == 2)
+                    {
+                        <textarea class="form-control" name="Answers[@i].AnswerText" rows="3"></textarea>
+                    }
+                    else if (int.Parse(question.QuestionType) == 3)
+                    {
+                        <input class="form-control" type="number" name="Answers[@i].AnswerText" />
+                    }
+                    else if (int.Parse(question.QuestionType) == 4)
+                    {
+                        @foreach (var option in question.QuestionOptions)
+                        {
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <input type="radio" name="Answers[@i].AnswerText" value="@option.QuestionOptionId" id="option_@option.QuestionOptionId@i" class="form-check-input" />
+                                    <label class="form-label ms-3" for="option_@option.QuestionOptionId@i">@option.OptionName</label>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    <p class="ps-5 pe-5 pt-1 pb-1 m-0" style="color: #7d7d7d;">
+                        <i class='bx bx-chevrons-right'></i> @question.Description
+                    </p>
+                </div>
+
+                <hr />
+            }
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    }
+</div>

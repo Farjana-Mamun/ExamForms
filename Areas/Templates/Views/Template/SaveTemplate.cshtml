@@ -1,0 +1,173 @@
+﻿@using Newtonsoft.Json
+@model ExamForms.ViewModel.TemplateViewModel
+
+@{
+
+}
+
+<style>
+    .advance-options .tagify__tag {
+        --tag-hover: var(--tag-bg);
+    }
+</style>
+
+<ul class="nav nav-tabs" id="templateTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link @((ViewBag.ActiveTab == "Setup") ? "active" : "")" id="template-setup-tab" data-bs-toggle="tab" href="#template-setup" role="tab" aria-controls="template-setup" aria-selected="true">Setup</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link @((ViewBag.ActiveTab == "Questions") ? "active" : "")" id="template-question-tab" data-bs-toggle="tab" href="#template-question" role="tab" aria-controls="template-question" aria-selected="false">Questions</a>
+    </li>
+</ul>
+
+<div class="tab-content" id="templateTabBody">
+    <div class="tab-pane fade @((ViewBag.ActiveTab == "Setup") ? "show active" : "")" id="template-setup" role="tabpanel" aria-labelledby="template-setup-tab">
+        <div class="pt-3 pb-3">
+            @using (Html.BeginForm("SaveTemplateSetup", "Template", FormMethod.Post, new { area = "Templates", id = "templateSetupForm", enctype = "multipart/form-data", @class = "" }))
+            {
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <input type="hidden" asp-for="TemplateId" />
+                <div class="mb-3">
+                    <label class="form-label" for="templateTitle">@Html.DisplayNameFor(x => x.Title)</label>
+                    @Html.EditorFor(x => x.Title, new { htmlAttributes = new { placeholder = "Template title", id = "templateTitle", @class = "form-control", required = "required" } })
+                    @Html.ValidationMessageFor(x => x.Title, "", new { @class = "text-danger" })
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="templateDescription">@Html.DisplayNameFor(x => x.Description)</label>
+                    <div class="descriptionEditor" id="editTemplateDescription"></div>
+                    <input asp-for="Description" type="hidden" id="templateDescription" />
+                    @Html.ValidationMessageFor(x => x.Description, "", new { @class = "text-danger" })
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="templateTopic">@Html.DisplayNameFor(x => x.TopicId)</label>
+                    @Html.DropDownListFor(model => model.TopicId, (IEnumerable<SelectListItem>)ViewBag.Topics, "-- Select a Topic --", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.TopicId, "", new { @class = "text-danger" })
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="templateTag">@Html.DisplayNameFor(x => x.Tags)</label>
+                    <input class='advance-options form-control' id="templateTags" value=''>
+                    <input type="hidden" id="hiddenTags" asp-for="Tags" name="Tags" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="templateTopic">@Html.DisplayNameFor(x => x.Image)</label>
+                    @Html.EditorFor(x => x.Image, new { htmlAttributes = new { id = "editTemplateImage", type = "hidden" } })
+                    @Html.EditorFor(x => x.Image, new { htmlAttributes = new { id = "templateImage", @class = "form-control", accept = "image/jpeg, image/png", name = "Image", type = "file" } })
+                </div>
+                <button type="submit" class="btn btn-primary">Next</button>
+            }
+        </div>
+    </div>
+
+    <div class="tab-pane fade @((ViewBag.ActiveTab == "Questions") ? "show active" : "")" id="template-question" role="tabpanel" aria-labelledby="template-question-tab">
+        <div class="pt-3 pb-3">
+            <button id="addQuestionBtn" class="btn btn-outline-success">Add New Question</button>
+        </div>
+        <input type="hidden" asp-for="TemplateId" class="templateId" />
+        <div id="question_list_sortable_placeholder">
+            <partial name="~/Areas/Templates/Views/Shared/_TemplateQuestionList.cshtml" model="@Model?.Questions" />
+        </div>
+    </div>
+</div>
+
+<div id="addQuestion_modal_placeholder"></div>
+
+@section Scripts {
+    <script>
+        var templateId = "";
+        $('#addQuestionBtn').on('click', function () {
+            templateId = $('.templateId').val();
+            $.ajax({
+                url: '/Templates/Question/SaveQuestionModal?questionId=' + 0 + '&templateId=' + templateId,
+                type: 'GET',
+                success: function (data) {
+                    $("#addQuestion_modal_placeholder").html(data);
+                    $("#questionModal").modal('show');
+                },
+                error: function (e) {
+                    alert("An error occurred while loading the modal." + e);
+                }
+            });
+        })
+
+        function editTemplateQuestion(questionId, templateId) {
+            $.ajax({
+                url: '/Templates/Question/SaveQuestionModal?questionId=' + questionId + '&templateId=' + templateId,
+                type: 'GET',
+                success: function (data) {
+                    $("#addQuestion_modal_placeholder").html(data);
+                    $("#questionModal").modal('show');
+                },
+                error: function (e) {
+                    alert("An error occurred while loading the modal." + e);
+                }
+            });
+        };
+
+        function deleteTemplateQuestion(questionId, templateId) {
+            if (confirm('Are you sure you want to delete this question?')) {
+                $.ajax({
+                    url: '/Templates/Question/DeleteTemplateQuestion?questionId=' + questionId,
+                    type: 'POST',
+                    success: function (data) {
+                        $('#question_list_sortable_placeholder').html(data);
+                    },
+                    error: function (e) {
+                        alert("An error occurred while loading the modal." + e);
+                    }
+                });
+            }            
+        };
+
+        // --------------------------- View Content ----------------------------
+        var content = @Html.Raw(JsonConvert.SerializeObject(Model.Description));
+        var templateSpecificTags = @Html.Raw(JsonConvert.SerializeObject(Model.Tags));
+
+        if (templateSpecificTags != null) {
+            var subjectsArray = templateSpecificTags.split(',');
+            var formattedValues = subjectsArray.map(function (subject) {
+                return { value: subject.trim() };
+            });
+            document.querySelector('.advance-options').value = JSON.stringify(formattedValues);
+        }
+
+        // --------------------------------- Tagify ----------------------------
+        var tagsFromServer = @Html.Raw(JsonConvert.SerializeObject(ViewBag.Tags));
+        var hiddenInput = document.getElementById('hiddenTags');
+        var input = document.querySelector('input.advance-options'),
+            tagify = new Tagify(input, {
+                pattern: /^.{0,20}$/,
+                delimiters: ",| ",
+                keepInvalidTags: false,
+                maxTags: 6,
+                whitelist: tagsFromServer,
+                dropdown: {
+                    enabled: 1,
+                    fuzzySearch: false,
+                    position: 'text',
+                    caseSensitive: false,
+                }
+            });
+        tagify.on('change', function () {
+            hiddenInput.value = tagify.value.map(tag => tag.value).join(',');
+            updatePlaceholderByTagsCount();
+        });
+        function updatePlaceholderByTagsCount() {
+            if (tagify.value.length == 0) {
+                tagify.setPlaceholder(`Maximum 6 tags can be added`);
+            } else {
+                tagify.setPlaceholder(`${6 - tagify.value.length} are left`);
+            }
+        }
+        updatePlaceholderByTagsCount()
+
+        // ---------------- EDITOR -----------------------
+        const quill = new Quill('.descriptionEditor', {
+            theme: 'snow'
+        });
+        quill.on('text-change', function (delta, oldDelta, source) {
+            var editorContent = quill.root.innerHTML;
+            $('#templateDescription').val(editorContent);
+        });
+        quill.root.innerHTML = content;
+    </script>
+}
